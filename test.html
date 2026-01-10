@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certification Scrum | MMI Toulon</title>
+    <style>
+        :root {
+            --mmi-blue: #9b2d86; /* violet principal */
+            --mmi-gold: #003a70; /* bleu foncé secondaire */
+            --bg: #f7f8fa;
+            --card: #ffffff;
+            --muted: #666666;
+            --text-dark: #222222;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', system-ui, Arial, sans-serif; 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text-dark); 
+            line-height: 1.6;
+        }
+
+        /* Header inspiré de ton code */
+         .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: linear-gradient(90deg, var(--mmi-blue), var(--mmi-gold));
+            color: white;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-nav a, .main-nav button {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Structure du Test */
+        .view { padding: 40px 24px; max-width: 800px; margin: 0 auto; }
+        
+        .card {
+            background: var(--card);
+            margin-top: 100px;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .hidden { display: none; }
+
+        h2 { color: var(--mmi-blue); margin-top: 0; font-size: 24px; }
+        
+        .progress-container {
+            background: #eee;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--mmi-blue);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--mmi-gold);
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--mmi-blue);
+            background: #fdf4fc;
+        }
+
+        .option-btn.selected {
+            border-color: var(--mmi-blue);
+            background: #fdf4fc;
+            box-shadow: inset 0 0 0 1px var(--mmi-blue);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--mmi-blue);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.9; }
+        .btn.secondary { background: var(--mmi-gold); }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--mmi-blue);
+            margin: 20px 0;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+        <header class="site-header">
+        <div style="font-weight: 800; font-size: 20px; letter-spacing: -0.5px;">MMI SCRUM</div>
+        <nav class="main-nav">
+            <a href="cours.html">COURS</a>
+            <a href="missions.html">MISSIONS</button>
+            <a href="test.html">TEST FINAL</a>
+        </nav>
+    </header>
+
+    <main class="view">
+        <div id="intro-screen" class="card" style="text-align: center;">
+            <h2>Certification Scrum MMI</h2>
+            <p style="color: var(--muted);">Ce test comporte 20 questions couvrant l'ensemble du module.<br>Une note de 10/20 est requise pour valider la certification.</p>
+            <button onclick="startQuiz()" class="btn" style="margin-top: 20px;">COMMENCER L'EXAMEN</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-weight: 600;">
+                    <span id="q-counter">QUESTION 1 / 20</span>
+                    <span id="percent-text">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+
+                <div id="question-area">
+                    </div>
+
+                <div class="footer-nav">
+                    <button id="prev-btn" onclick="changeQuestion(-1)" class="btn secondary hidden">Précédent</button>
+                    <button id="next-btn" onclick="changeQuestion(1)" class="btn" style="margin-left: auto;">Suivant</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden card" style="text-align: center;">
+            <h2>Résultat de l'examen</h2>
+            <div id="final-score" class="score-display">0/20</div>
+            <p id="feedback-message" style="margin-bottom: 30px;"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="location.reload()" class="btn secondary">REPASSER LE TEST</button>
+                <a href="missions.html" class="btn">RETOUR AUX MISSIONS</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        &copy; 2024 MMI Toulon - Approche Pédagogique Scrum
+    </footer>
+
+    <script>
+        const questions = [
+            { q: "Quel rapport souligne que seulement 16,2% des projets informatiques sont réussis ?", o: ["Rapport GARTNER", "Rapport CHAOS", "Rapport AGILE"], a: 1 },
+            { q: "L'approche qui consiste à affiner le produit par boucles successives est dite :", o: ["Incrémentale", "Itérative", "Séquentielle"], a: 1 },
+            { q: "Qui est le seul responsable de la priorisation du Product Backlog ?", o: ["Le Scrum Master", "Le Product Owner", "L'Équipe de Dev"], a: 1 },
+            { q: "Quelle est la durée maximale d'un Sprint selon le guide Scrum ?", o: ["2 semaines", "1 mois", "3 mois"], a: 1 },
+            { q: "Le Daily Scrum est une réunion quotidienne de maximum :", o: ["5 minutes", "15 minutes", "30 minutes"], a: 1 },
+            { q: "Que signifie le 'R' dans la méthode de communication CAMERA ?", o: ["Rapidité", "Rigueur", "Redondance minimale"], a: 2 },
+            { q: "Quel événement permet de montrer l'Incrément au client ?", o: ["Sprint Planning", "Sprint Review", "Sprint Retrospective"], a: 1 },
+            { q: "Qui aide l'équipe à supprimer les obstacles techniques ou humains ?", o: ["Le Product Owner", "Le Scrum Master", "Le Client"], a: 1 },
+            { q: "Le graphique représentant le reste à faire par jour s'appelle :", o: ["Burn-up Chart", "Burn-down Chart", "Gantt Chart"], a: 1 },
+            { q: "Dans une équipe Scrum, combien de rôles différents existe-t-il ?", o: ["3 rôles", "4 rôles", "5 rôles"], a: 0 },
+            { q: "Un 'Incrément' doit être obligatoirement :", o: ["Documenté", "Fini et utilisable", "Codé en JavaScript"], a: 1 },
+            { q: "La Sprint Retrospective sert à améliorer :", o: ["Le produit", "Le budget", "Les processus et l'équipe"], a: 2 },
+            { q: "Le Product Backlog est un document :", o: ["Fixe", "Évolutif (vivant)", "Confidentiel"], a: 1 },
+            { q: "Le Manifeste Agile privilégie les individus et leurs interactions face aux :", o: ["Outils et processus", "Contrats", "Logiciels"], a: 0 },
+            { q: "Quelle méthode de management visuel utilise des colonnes (À faire, En cours, Fait) ?", o: ["Le Kanban", "Le Gantt", "La Cascade"], a: 0 },
+            { q: "L'équipe de développement décide elle-même comment travailler. C'est :", o: ["L'anarchie", "L'auto-organisation", "La hiérarchie"], a: 1 },
+            { q: "Le client est invité principalement lors de quel événement ?", o: ["Daily Scrum", "Sprint Review", "Retrospective"], a: 1 },
+            { q: "Quel est l'ordre correct au début du Sprint ?", o: ["Review puis Planning", "Planning puis Dailies", "Dailies puis Planning"], a: 1 },
+            { q: "Un tableau de bord sert d'Indicateur, d'Alerte et de :", o: ["Surveillance", "Capitalisation", "Motivation"], a: 1 },
+            { q: "La 'Definition of Done' est établie par :", o: ["Le PO seul", "L'Équipe Scrum", "La Direction"], a: 1 }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        function startQuiz() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            const area = document.getElementById('question-area');
+            
+            area.innerHTML = `
+                <div class="question-text">${q.q}</div>
+                <div class="options-grid">
+                    ${q.o.map((opt, i) => `
+                        <button class="option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+                            <span style="font-weight: 800; margin-right: 12px; color: var(--mmi-blue);">${String.fromCharCode(65+i)}.</span>
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+
+            // Update UI
+            document.getElementById('q-counter').innerText = `QUESTION ${currentIdx + 1} / ${questions.length}`;
+            const prog = ((currentIdx + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = prog + '%';
+            document.getElementById('percent-text').innerText = Math.round(prog) + '%';
+            
+            document.getElementById('prev-btn').classList.toggle('hidden', currentIdx === 0);
+            document.getElementById('next-btn').innerText = (currentIdx === questions.length - 1) ? "TERMINER" : "SUIVANT";
+        }
+
+        function selectOption(idx) {
+            userAnswers[currentIdx] = idx;
+            showQuestion();
+        }
+
+        function changeQuestion(dir) {
+            if (dir === 1 && userAnswers[currentIdx] === null) {
+                alert("Veuillez sélectionner une réponse.");
+                return;
+            }
+
+            currentIdx += dir;
+
+            if (currentIdx >= questions.length) {
+                showResults();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            userAnswers.forEach((ans, i) => {
+                if(ans === questions[i].a) score++;
+            });
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            const finalScoreElem = document.getElementById('final-score');
+            finalScoreElem.innerText = `${score} / 20`;
+
+            const feedback = document.getElementById('feedback-message');
+            if(score >= 16) feedback.innerText = "Excellent ! Vous maîtrisez parfaitement la méthodologie Scrum.";
+            else if(score >= 10) feedback.innerText = "Félicitations ! Vous avez validé vos connaissances de base.";
+            else feedback.innerText = "Score insuffisant. Nous vous conseillons de relire le cours et de refaire les missions.";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révisions Flashcards | MMI Scrum</title>
+    <style>
+        :root {
+            --mmi-blue: #9b2d86; /* violet principal */
+            --mmi-gold: #003a70; /* bleu foncé secondaire */
+            --bg: #f7f8fa;
+            --card: #ffffff;
+            --muted: #666666;
+            --text-dark: #222222;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', system-ui, Arial, sans-serif; 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text-dark); 
+            line-height: 1.6;
+        }
+
+        /* Header identique au Test Final */
+       .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: linear-gradient(90deg, var(--mmi-blue), var(--mmi-gold));
+            color: white;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-nav a, .main-nav button {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Mise en page */
+        .container {
+            padding: 180px 24px 60px; /* Espace pour le header/nav fixe */
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header.intro {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        header.intro h1 {
+            color: var(--mmi-blue);
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        /* Style des Flashcards adapté à la DA */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .flashcard-container { perspective: 1000px; height: 300px; }
+        
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped { transform: rotateY(180deg); }
+        
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+
+        .front { 
+            background: var(--card); 
+            color: var(--mmi-gold); 
+            border-top: 5px solid var(--mmi-blue);
+        }
+
+        .back { 
+            background: var(--card);
+            color: var(--text-dark); 
+            transform: rotateY(180deg);
+            border-top: 5px solid var(--mmi-gold);
+        }
+
+        .category-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--mmi-blue);
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .click-hint {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* Bouton DA MMI */
+        .btn-action {
+            display: inline-block;
+            background: var(--mmi-blue);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 40px;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--mmi-gold);
+        }
+
+        .site-footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+     <header class="site-header">
+        <div style="font-weight: 800; font-size: 20px; letter-spacing: -0.5px;">MMI SCRUM</div>
+        <nav class="main-nav">
+            <a href="cours.html">COURS</a>
+            <a href="missions.html">MISSIONS</button>
+            <a href="test.html">TEST FINAL</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <header class="intro">
+            <h1>Flashcards de Révision</h1>
+            <p style="color: var(--muted);">Cliquez sur les cartes pour mémoriser les points clés du framework Scrum avant de passer l'examen.</p>
+        </header>
+
+        <main class="grid-cards">
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 1 : Échecs</span>
+                        <h3 class="card-title">Quelles sont les 4 catégories de causes d'échec du CHAOS Report ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <ul style="text-align: left; font-size: 14px; list-style: none; padding: 0;">
+                            <li style="margin-bottom: 8px;">📌 <b>Besoins</b> (Imprécis)</li>
+                            <li style="margin-bottom: 8px;">📌 <b>Communication</b> (Manque de feedback)</li>
+                            <li style="margin-bottom: 8px;">📌 <b>Techniques</b> (Complexité)</li>
+                            <li>📌 <b>Organisation</b> (Objectifs flous)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 2 : Concepts</span>
+                        <h3 class="card-title">Différence entre Itératif et Incrémental ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <p style="text-align: left; font-size: 14px;">
+                            <b style="color: var(--mmi-blue);">Itératif :</b> On affine et on améliore le produit par boucles.<br><br>
+                            <b style="color: var(--mmi-gold);">Incrémental :</b> On ajoute des morceaux finis au fur et à mesure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 2 : Scrum</span>
+                        <h3 class="card-title">Quels sont les 3 rôles piliers de Scrum ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <ol style="text-align: left; font-size: 14px;">
+                            <li><b>Product Owner</b> (Vision)</li>
+                            <li><b>Scrum Master</b> (Coach/Facilitateur)</li>
+                            <li><b>Dev Team</b> (Réalisation technique)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 3 : Réunions</span>
+                        <h3 class="card-title">Que signifie l'acronyme CAMERA ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <p style="font-size: 12px; text-align: left; line-height: 1.4;">
+                            <b>C</b>adre / <b>A</b>mbiance / <b>M</b>éthode<br>
+                            <b>E</b>clairage / <b>R</b>ôles / <b>A</b>ction
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 4 : Pilotage</span>
+                        <h3 class="card-title">Les 3 objectifs d'un tableau de bord ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <p style="font-weight: 700; color: var(--mmi-blue);">ALERTE</p>
+                        <p style="font-weight: 700; color: var(--mmi-gold);">INDICATEUR</p>
+                        <p style="font-weight: 700; color: var(--mmi-blue);">CAPITALISATION</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="front">
+                        <span class="category-tag">Chapitre 2 : Artefacts</span>
+                        <h3 class="card-title">Qu'est-ce qu'un Incrément ?</h3>
+                        <p class="click-hint">Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="back">
+                        <p style="font-size: 14px;">C'est la somme de tous les éléments du Backlog terminés. Il doit être <b>Fini</b> et <b>Utilisable</b>.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div style="text-align: center;">
+            <a href="test.html" class="btn-action">PRÊT POUR L'EXAMEN FINAL ?</a>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2024 MMI Toulon - Approche Pédagogique Scrum
+    </footer>
+
+</body>
+</html>

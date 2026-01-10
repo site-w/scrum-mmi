@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Missions Scrum | MMI Toulon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="java_scrum.js"></script>
+   <style>
+        :root {
+            --mmi-blue: #9b2d86; /* Violet principal MMI */
+            --mmi-gold: #003a70; /* Bleu foncé secondaire MMI */
+            --bg: #f7f8fa;       /* Gris clair des pages Cours/Test */
+            --card: #ffffff;
+            --text-dark: #222222;
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, Arial, sans-serif; 
+            background: var(--bg); 
+            color: var(--text-dark); 
+            margin: 0; 
+            line-height: 1.6;
+        }
+
+        /* Header identique à Cours et Test */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: linear-gradient(90deg, var(--mmi-blue), var(--mmi-gold));
+            color: white;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-nav a, .main-nav button {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1000px;
+            margin: 100px auto 50px;
+            padding: 20px;
+        }
+
+        /* Cartes de Mission (Style Flashcards) */
+        .mission-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #eeeeee;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Bouton Action identique à "Prêt pour l'examen" */
+        .btn-action {
+            display: inline-block;
+            background: var(--mmi-blue);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-action:hover { background: var(--mmi-gold); transform: translateY(-2px); }.btn-action {
+    display: inline-block;
+    background: var(--mmi-blue); /* Violet MMI */
+    color: white !important;      /* Texte blanc forcé */
+    padding: 14px 28px;
+    border-radius: 99px;        /* Forme Pill comme dans Test */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(155, 45, 134, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    background: var(--mmi-gold); /* Devient Bleu foncé au survol */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 58, 112, 0.4);
+}
+
+        /* Zones de Drag & Drop adaptées */
+       .drop-zone { 
+    min-height: 120px; 
+    background: #edf2f7;        /* Fond gris bleuté pour bien voir où poser les cartes */
+    border: 2px dashed #cbd5e0; 
+    border-radius: 12px; 
+    padding: 15px; 
+}
+        
+       .card-item { 
+    background: #f8f9fa;        /* Gris très léger pour différencier du fond blanc */
+    color: var(--mmi-gold);     /* Texte en bleu foncé pour la lisibilité */
+    padding: 12px 18px; 
+    border-radius: 10px; 
+    border: 2px solid #e2e8f0;  /* Bordure plus marquée */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    cursor: grab;
+    margin-bottom: 8px;
+    font-weight: 700;           /* Texte plus gras */
+    transition: border-color 0.2s;
+}
+
+.card-item:hover {
+    border-color: var(--mmi-blue); /* Bordure violette au survol */
+}
+
+        /* Validation Colors */
+        .correct-card { border: 2px solid #2ecc71 !important; background: #eafaf1 !important; }
+        .wrong-card { border: 2px solid #e74c3c !important; background: #fdeaea !important; }
+
+        .screen { display: none; }
+        .active { display: block; }
+    </style>
+</head>
+<body>
+
+   <header class="site-header">
+        <div style="font-weight: 800; font-size: 20px; letter-spacing: -0.5px;">MMI SCRUM</div>
+        <nav class="main-nav">
+            <a href="cours.html">COURS</a>
+            <a href="missions.html">MISSIONS</button>
+            <a href="test.html">TEST FINAL</a>
+        </nav>
+    </header>
+
+   <div class="container">
+       <section id="screen-hub" class="screen active">
+    <h1 style="font-size: 28px; font-weight: 800; color: var(--mmi-gold); margin-bottom: 10px;">Missions de Terrain</h1>
+    <p style="color: var(--muted); margin-bottom: 40px;">Appliquez vos connaissances à travers ces 6 défis interactifs avant la certification.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 01</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">Chaos Report</h3>
+            <p style="font-size: 14px; color: var(--muted);">Analysez et triez les causes majeures d'échec des projets informatiques.</p>
+            <button onclick="showScreen('m1')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 02</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">Agile vs Waterfall</h3>
+            <p style="font-size: 14px; color: var(--muted);">Distinguez les concepts de l'itératif, de l'incrémental et du prédictif.</p>
+            <button onclick="showScreen('m2')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 03</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">Mythes & Artefacts</h3>
+            <p style="font-size: 14px; color: var(--muted);">Chassez les idées reçues et identifiez les piliers officiels du Scrum Guide.</p>
+            <button onclick="showScreen('m3')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 04</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">Les Rôles Scrum</h3>
+            <p style="font-size: 14px; color: var(--muted);">Attribuez les bonnes responsabilités au PO, au Scrum Master et aux Devs.</p>
+            <button onclick="showScreen('m4')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 05</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">La Timeline</h3>
+            <p style="font-size: 14px; color: var(--muted);">Ordonnez les événements du Sprint, de la Planification à la Rétrospective.</p>
+            <button onclick="showScreen('m5')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+
+        <div class="mission-card">
+            <span style="font-size: 11px; font-weight: 800; color: var(--mmi-blue); text-transform: uppercase; letter-spacing: 1px;">Défi 06</span>
+            <h3 style="color: var(--mmi-gold); font-weight: 800; margin: 10px 0;">Management Visuel</h3>
+            <p style="font-size: 14px; color: var(--muted);">Pilotez le projet grâce aux indicateurs de performance (Burn-down chart).</p>
+            <button onclick="showScreen('m6')" class="btn-action" style="margin-top: 20px; width: 100%;">COMMENCER</button>
+        </div>
+    </div>
+</section>
+
+   <section id="screen-m1" class="screen">
+    <h2 class="text-2xl font-bold mb-2">Mission 1 : Analyse des échecs</h2>
+    <p class="text-gray-400 mb-6 text-center">Triez les 8 causes d'échec pour débloquer la suite.</p>
+
+    <div id="pool-m1" class="flex flex-wrap justify-center gap-3 mb-10 p-4 glass rounded-2xl max-w-4xl">
+        <div id="c1-1" draggable="true" ondragstart="drag(event)" data-cat="besoins" class="card-item">Cahier des charges incomplet</div>
+        <div id="c1-2" draggable="true" ondragstart="drag(event)" data-cat="comm" class="card-item">Absence du client aux réunions</div>
+        <div id="c1-3" draggable="true" ondragstart="drag(event)" data-cat="tech" class="card-item">Technologies trop complexes</div>
+        <div id="c1-4" draggable="true" ondragstart="drag(event)" data-cat="org" class="card-item">Manque de soutien de la direction</div>
+        <div id="c1-5" draggable="true" ondragstart="drag(event)" data-cat="besoins" class="card-item">Changement de besoins en cours de route</div>
+        <div id="c1-6" draggable="true" ondragstart="drag(event)" data-cat="comm" class="card-item">Mauvaise circulation de l'information</div>
+        <div id="c1-7" draggable="true" ondragstart="drag(event)" data-cat="tech" class="card-item">Code source instable (bugs)</div>
+        <div id="c1-8" draggable="true" ondragstart="drag(event)" data-cat="org" class="card-item">Délais irréalistes imposés</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl">
+        <div class="glass p-4 border-t-4 border-blue-400">
+            <h3 class="text-xs font-bold text-blue-400 mb-2 uppercase">Besoins</h3>
+            <div id="besoins" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-purple-400">
+            <h3 class="text-xs font-bold text-purple-400 mb-2 uppercase">Communication</h3>
+            <div id="comm" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-green-400">
+            <h3 class="text-xs font-bold text-green-400 mb-2 uppercase">Techniques</h3>
+            <div id="tech" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-orange-400">
+            <h3 class="text-xs font-bold text-orange-400 mb-2 uppercase">Organisation</h3>
+            <div id="org" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone"></div>
+        </div>
+    </div>
+
+    <button onclick="checkM1()" class="mt-10 btn-mmi px-10 py-4 rounded-full">VALIDER LA MISSION (0/8)</button>
+</section>
+
+  <section id="screen-m2" class="screen">
+    <h2 class="text-2xl font-bold mb-2 text-center">Mission 2 : Itératif vs Incrémental</h2>
+    <p class="text-gray-400 mb-6 text-center">Classez les 9 concepts pour valider votre compréhension.</p>
+
+    <div id="pool-m2" class="flex flex-wrap justify-center gap-3 mb-10 p-4 glass rounded-2xl max-w-4xl mx-auto">
+        <div id="c2-1" draggable="true" ondragstart="drag(event)" data-cat="iter" class="card-item">Amélioration par boucles</div>
+        <div id="c2-2" draggable="true" ondragstart="drag(event)" data-cat="incr" class="card-item">Ajout de morceaux finis</div>
+        <div id="c2-3" draggable="true" ondragstart="drag(event)" data-cat="both" class="card-item">Livraisons fréquentes</div>
+        <div id="c2-4" draggable="true" ondragstart="drag(event)" data-cat="iter" class="card-item">On affine le dessin (Mona Lisa)</div>
+        <div id="c2-5" draggable="true" ondragstart="drag(event)" data-cat="incr" class="card-item">Construction brique par brique</div>
+        <div id="c2-6" draggable="true" ondragstart="drag(event)" data-cat="both" class="card-item">Feedback régulier</div>
+        <div id="c2-7" draggable="true" ondragstart="drag(event)" data-cat="iter" class="card-item">Réduction progressive de l'incertitude</div>
+        <div id="c2-8" draggable="true" ondragstart="drag(event)" data-cat="incr" class="card-item">Découpage en fonctionnalités utilisables</div>
+        <div id="c2-9" draggable="true" ondragstart="drag(event)" data-cat="both" class="card-item">Adaptation au changement</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
+        <div class="glass p-4 border-t-4 border-indigo-400">
+            <h3 class="text-xs font-bold text-indigo-400 mb-2 uppercase">Itératif (Affiner)</h3>
+            <div id="iter" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-purple-400">
+            <h3 class="text-xs font-bold text-purple-400 mb-2 uppercase">Incrémental (Ajouter)</h3>
+            <div id="incr" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-pink-400">
+            <h3 class="text-xs font-bold text-pink-400 mb-2 uppercase">Les deux (Agile)</h3>
+            <div id="both" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button onclick="checkM2()" class="mt-10 btn-mmi px-10 py-4 rounded-full font-bold text-black">VALIDER LA MISSION 2</button>
+    </div>
+</section>
+
+    <section id="screen-m3" class="screen">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-cyan-400">Mission 3 : L'Univers Scrum</h2>
+        <p class="text-gray-400">Éliminez les préjugés et identifiez les piliers du framework.</p>
+    </div>
+
+    <div id="m3-step1" class="glass p-8 max-w-4xl w-full">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+            <span class="text-yellow-400">⚡</span> Vrai ou Faux ? (Cliquez sur les affirmations CORRECTES)
+        </h3>
+        <div id="myths-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="toggleStatement(this, false)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "En Agile, on ne fait absolument aucune documentation."
+            </button>
+            <button onclick="toggleStatement(this, true)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "Scrum est le framework agile le plus utilisé au monde."
+            </button>
+            <button onclick="toggleStatement(this, false)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "Le client est le chef direct de l'équipe de développement."
+            </button>
+            <button onclick="toggleStatement(this, true)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "Le Product Owner porte la vision du produit et le Backlog."
+            </button>
+            <button onclick="toggleStatement(this, false)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "Un Sprint peut durer 6 mois si le projet est complexe."
+            </button>
+            <button onclick="toggleStatement(this, true)" class="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-left text-sm transition">
+                "Le Scrum Master est un facilitateur, pas un chef de projet."
+            </button>
+        </div>
+    </div>
+
+    <div id="m3-step2" class="mt-8 glass p-8 max-w-4xl w-full">
+        <h3 class="text-xl font-bold mb-4">Structure Scrum : Placez l'intrus dans la zone "Artefacts"</h3>
+        <div id="pool-m3" class="flex flex-wrap gap-3 mb-6 p-4 bg-white/5 rounded-xl">
+            <div id="c3-1" draggable="true" ondragstart="drag(event)" data-cat="artefact" class="card-item">Product Backlog</div>
+            <div id="c3-2" draggable="true" ondragstart="drag(event)" data-cat="event" class="card-item">Daily Scrum</div>
+            <div id="c3-3" draggable="true" ondragstart="drag(event)" data-cat="artefact" class="card-item">Incrément</div>
+        </div>
+        <div class="glass p-4 border-2 border-dashed border-green-500/30">
+            <h4 class="text-xs font-bold text-green-400 mb-2 uppercase">Zone Artefacts (Livrables)</h4>
+            <div id="artefacts" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone h-24"></div>
+        </div>
+    </div>
+
+    <button onclick="checkM3()" class="mt-10 btn-mmi px-12 py-4 rounded-full">VALIDER LA MISSION 3</button>
+    
+</section>
+
+<section id="screen-m4" class="screen">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold">Mission 4 : Qui fait quoi ?</h2>
+        <p class="text-gray-400">Distribuez les 6 responsabilités aux bons membres de l'équipe.</p>
+    </div>
+
+    <div id="pool-m4" class="flex flex-wrap justify-center gap-3 mb-10 p-4 glass rounded-2xl max-w-4xl mx-auto">
+        <div id="c4-1" draggable="true" ondragstart="drag(event)" data-cat="po" class="card-item">Porte la vision du produit</div>
+        <div id="c4-2" draggable="true" ondragstart="drag(event)" data-cat="sm" class="card-item">Supprime les obstacles</div>
+        <div id="c4-3" draggable="true" ondragstart="drag(event)" data-cat="dev" class="card-item">Décide du "Comment" technique</div>
+        <div id="c4-4" draggable="true" ondragstart="drag(event)" data-cat="po" class="card-item">Priorise le Product Backlog</div>
+        <div id="c4-5" draggable="true" ondragstart="drag(event)" data-cat="sm" class="card-item">Garant de la méthode Scrum</div>
+        <div id="c4-6" draggable="true" ondragstart="drag(event)" data-cat="dev" class="card-item">Crée l'Incrément "Fini"</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
+        <div class="glass p-4 border-t-4 border-cyan-400">
+            <h3 class="text-center font-bold text-cyan-400 mb-3 uppercase text-xs">Product Owner</h3>
+            <div id="po" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-indigo-400">
+            <h3 class="text-center font-bold text-indigo-400 mb-3 uppercase text-xs">Scrum Master</h3>
+            <div id="sm" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+        <div class="glass p-4 border-t-4 border-pink-400">
+            <h3 class="text-center font-bold text-pink-400 mb-3 uppercase text-xs">Dev Team</h3>
+            <div id="dev" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone min-h-[150px]"></div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button onclick="checkM4()" class="mt-12 btn-mmi px-12 py-4 rounded-full font-bold">VALIDER L'ÉQUIPE</button>
+    </div>
+</section>
+
+<section id="screen-m5" class="screen">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold">Mission 5 : Chronologie du Sprint</h2>
+        <p class="text-gray-400">Placez les cérémonies dans l'ordre chronologique (de gauche à droite).</p>
+    </div>
+
+    <div id="pool-m5" class="flex flex-wrap justify-center gap-3 mb-10 p-4 glass rounded-2xl max-w-4xl">
+        <div id="c5-1" draggable="true" ondragstart="drag(event)" data-order="1" class="card-item bg-blue-500/20">Sprint Planning</div>
+        <div id="c5-2" draggable="true" ondragstart="drag(event)" data-order="2" class="card-item bg-blue-500/20">Daily Scrum</div>
+        <div id="c5-3" draggable="true" ondragstart="drag(event)" data-order="3" class="card-item bg-blue-500/20">Sprint Review</div>
+        <div id="c5-4" draggable="true" ondragstart="drag(event)" data-order="4" class="card-item bg-blue-500/20">Sprint Retrospective</div>
+    </div>
+
+    <div class="w-full max-w-5xl mb-12">
+        <div class="flex justify-between mb-2 px-2 text-xs font-bold text-gray-500 uppercase tracking-widest">
+            <span>Début du Sprint</span>
+            <span>Fin du Sprint</span>
+        </div>
+        <div class="grid grid-cols-4 gap-4">
+            <div class="glass p-4 text-center">
+                <span class="text-[10px] text-gray-500 block mb-2 uppercase">Étape 1</span>
+                <div id="t1" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone h-20 border-dashed border-white/10 italic"></div>
+            </div>
+            <div class="glass p-4 text-center">
+                <span class="text-[10px] text-gray-500 block mb-2 uppercase">Étape 2</span>
+                <div id="t2" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone h-20 border-dashed border-white/10 italic"></div>
+            </div>
+            <div class="glass p-4 text-center">
+                <span class="text-[10px] text-gray-500 block mb-2 uppercase">Étape 3</span>
+                <div id="t3" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone h-20 border-dashed border-white/10 italic"></div>
+            </div>
+            <div class="glass p-4 text-center">
+                <span class="text-[10px] text-gray-500 block mb-2 uppercase">Étape 4</span>
+                <div id="t4" ondrop="drop(event)" ondragover="allow(event)" class="drop-zone h-20 border-dashed border-white/10 italic"></div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="checkM5()" class="mt-4 btn-mmi px-12 py-4 rounded-full font-bold">TERMINER LE SPRINT</button>
+</section>
+
+<section id="screen-m6" class="screen">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold">Mission 6 : Management Visuel</h2>
+        <p class="text-gray-400">Configurez votre Daily Scrum et votre Tableau de Bord.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl w-full">
+        
+        <div class="glass p-6">
+            <h3 class="text-xl font-bold mb-4 text-cyan-400">1. Configurer la Réunion</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs uppercase font-bold text-gray-500">Rôle : Qui prend les notes ?</label>
+                    <select id="role-select" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl mt-1 outline-none focus:border-cyan-500">
+                        <option value="none">-- Choisir --</option>
+                        <option value="anim">L'Animateur</option>
+                        <option value="sec">Le Secrétaire</option>
+                        <option value="client">Le Client</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs uppercase font-bold text-gray-500">Objectif CAMERA prioritaire</label>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button onclick="setCameraGoal(this, 'C')" class="cam-btn p-2 border border-white/10 rounded-lg text-xs">CADRE (Temps)</button>
+                        <button onclick="setCameraGoal(this, 'A')" class="cam-btn p-2 border border-white/10 rounded-lg text-xs">ACTION (Décision)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass p-6">
+            <h3 class="text-xl font-bold mb-4 text-indigo-400">2. Analyse de l'Indicateur</h3>
+            <p class="text-sm text-gray-400 mb-4">Quel graphique est le plus adapté pour suivre l'évolution du reste à faire (Burn-down chart) ?</p>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="setChart('pie')" id="chart-pie" class="chart-opt border border-white/10 p-4 rounded-2xl text-center cursor-pointer hover:bg-white/5">
+                    <div class="text-2xl mb-2">📊</div>
+                    <span class="text-xs font-bold uppercase">Camembert</span>
+                </div>
+                <div onclick="setChart('line')" id="chart-line" class="chart-opt border border-white/10 p-4 rounded-2xl text-center cursor-pointer hover:bg-white/5">
+                    <div class="text-2xl mb-2">📈</div>
+                    <span class="text-xs font-bold uppercase">Courbe (Line)</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                <p class="text-[10px] text-yellow-500 font-bold uppercase mb-1">Concept de Capitalisation :</p>
+                <p class="text-xs italic text-gray-300">"Un bon tableau de bord doit servir d'alerte, d'indicateur et de..."</p>
+                <input type="text" id="capit-input" placeholder="Réponse..." class="w-full bg-transparent border-b border-white/20 mt-2 text-sm outline-none focus:border-yellow-500">
+            </div>
+        </div>
+    </div>
+
+    <button onclick="checkM6()" class="mt-12 btn-mmi px-12 py-4 rounded-full font-bold">VALIDER LE PILOTAGE</button>
+</section>
+</body>
+</html>
